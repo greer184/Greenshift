@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
-  get 'content/index'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  # This makes our index view the homepage.
+  root 'content#index'
+  
 end
