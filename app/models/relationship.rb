@@ -96,9 +96,6 @@ class Relationship
 
                 # Grab the operation information
                 type, op = item.op
-
-                # Get the timestamp of content
-                age = Time.now - DateTime.parse(item.timestamp + 'Z').to_time
         
                 # Filter by vote type -> reblog requires json
                 next unless type == "custom_json"
@@ -109,7 +106,26 @@ class Relationship
                 author = json[1]['author']
             end
         end
-        author
+
+        # Repeat the process for the next author
+        result = nil
+        max_weight = 0
+        api.get_account_history(author, -1, depth) do |data|
+            data.each do |i, item|
+
+                # Just our normal process of filtering blockchain info
+                type, op = item.op
+                age = Time.now - DateTime.parse(item.timestamp + 'Z').to_time
+        
+                # Filtering of type, author, and age
+                next unless type == "comment"
+                next unless op.parent_author.empty?
+                next if age > SECONDS_IN_WEEK
+                result = op.permlink
+
+            end
+        end
+        result
     end
 
 end
