@@ -119,10 +119,48 @@ class Relationship
         
                 # Filtering of type, author, and age
                 next unless type == "comment"
-                next unless op.parent_author.empty?
                 next if age > SECONDS_IN_WEEK
                 result = op.permlink
 
+            end
+        end
+        result
+    end
+
+    def self.largest_contributor(account, depth)
+        api = Radiator::Api.new
+
+        # Grab most recent N operations for the author and cycle through them
+        result = nil
+        contribution = 0
+        api.get_account_history(account, -1, depth) do |data|
+            data.each do |i, item|
+
+                # Grab the operation information
+                type, op = item.op
+
+                # Get the timestamp of content
+                age = Time.now - DateTime.parse(item.timestamp + 'Z').to_time
+        
+                # Filter by vote type, timestamp, and make sure author is different
+                next unless type == "vote"
+                next unless op.author != account
+                next if age > SECONDS_IN_WEEK
+
+                # We now need to grab this piece of content to get all votes on it
+                api.get_content(op.author, op.permlink) do |data|
+                    data.active_votes do |votes|
+                        votes.each do |v|
+
+                            # Find the vote of the account and measure
+                            next unless account == v.voter
+                            if contribution > v.weight 
+                                contribution = v.weight
+                                result = op.permlink
+                            end
+                        end
+                    end
+                end
             end
         end
         result
