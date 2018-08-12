@@ -6,7 +6,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = nil
+        result = "nil"
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -31,7 +31,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = nil
+        result = "nil"
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -59,7 +59,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = nil
+        result = "nil"
         max_weight = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -108,7 +108,7 @@ class Relationship
         end
 
         # Repeat the process for the next author
-        result = nil
+        result = "nil"
         max_weight = 0
         api.get_account_history(author, -1, depth) do |data|
             data.each do |i, item|
@@ -131,7 +131,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = nil
+        result = "nil"
         contribution = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -148,13 +148,13 @@ class Relationship
                 next if age > SECONDS_IN_WEEK
 
                 # We now need to grab this piece of content to get all votes on it
-                api.get_content(op.author, op.permlink) do |data|
-                    data.active_votes do |votes|
+                api.get_content(op.author, op.permlink) do |content|
+                    content.active_votes do |votes|
                         votes.each do |v|
 
                             # Find the vote of the account and measure
                             next unless account == v.voter
-                            if contribution > v.weight 
+                            if v.weight > contribution
                                 contribution = v.weight
                                 result = op.permlink
                             end

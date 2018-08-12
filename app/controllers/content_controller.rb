@@ -6,7 +6,7 @@ class ContentController < ApplicationController
     @recent_vote = Relationship.recent_upvote('greer184', 200)
     @max_vote = Relationship.max_upvote('greer184', 200)
     @recent_resteem = Relationship.recent_resteem('greer184', 1000)
-    @largest_contibution = Relationship.largest_contributor('greer184', 200)
+    @largest_contribution = Relationship.largest_contributor('greer184', 200)
   end
 
 end
