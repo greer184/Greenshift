@@ -48,7 +48,12 @@ class Relationship
 
                 # Filter by vote weighting
                 next if op.weight <= 0
-                result = op.permlink
+
+                # Verify this is top-level piece of content
+                api.get_content(op.author, op.permlink) do |content|
+                    next unless content.parent_author.empty?
+                    result = op.permlink
+                end
 
             end
         end
@@ -77,8 +82,13 @@ class Relationship
 
                 # Filter by vote weighting
                 next if op.weight < max_weight
-                result = op.permlink
-                max_weight = op.weight
+
+                # Verify this is top-level piece of content
+                api.get_content(op.author, op.permlink) do |content|
+                    next unless content.parent_author.empty?
+                    result = op.permlink
+                    max_weight = op.weight
+                end
 
             end
         end
@@ -120,7 +130,12 @@ class Relationship
                 # Filtering of type, author, and age
                 next unless type == "comment"
                 next if age > SECONDS_IN_WEEK
-                result = op.permlink
+
+                # Verify this is top-level piece of content
+                api.get_content(op.author, op.permlink) do |content|
+                    next unless content.parent_author.empty?
+                    result = op.permlink
+                end
 
             end
         end
@@ -149,6 +164,9 @@ class Relationship
 
                 # We now need to grab this piece of content to get all votes on it
                 api.get_content(op.author, op.permlink) do |content|
+
+                    # Make sure this content is a top level post
+                    next unless content.parent_author.empty?
                     content.active_votes do |votes|
                         votes.each do |v|
 
