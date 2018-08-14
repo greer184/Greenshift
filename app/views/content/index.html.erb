@@ -1,6 +1,4 @@
 <h1>Interesting Permlinks</h1>
-<p>1. <%= @recent_author %></p>
-<p>2. <%= @recent_vote %></p>
-<p>3. <%= @max_vote %></p>
-<p>4. <%= @recent_resteem %></p>
-<p>5. <%= @largest_contribution %></p>
+<% @options.each do |op| %>
+    <p><%= op %></p>
+<% end %>

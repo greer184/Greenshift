@@ -6,7 +6,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = "nil"
+        result = nil
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -31,7 +31,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = "nil"
+        result = nil
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -64,7 +64,7 @@ class Relationship
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = "nil"
+        result = nil
         max_weight = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -117,36 +117,15 @@ class Relationship
             end
         end
 
-        # Repeat the process for the next author
-        result = "nil"
-        max_weight = 0
-        api.get_account_history(author, -1, depth) do |data|
-            data.each do |i, item|
-
-                # Just our normal process of filtering blockchain info
-                type, op = item.op
-                age = Time.now - DateTime.parse(item.timestamp + 'Z').to_time
-        
-                # Filtering of type, author, and age
-                next unless type == "comment"
-                next if age > SECONDS_IN_WEEK
-
-                # Verify this is top-level piece of content
-                api.get_content(op.author, op.permlink) do |content|
-                    next unless content.parent_author.empty?
-                    result = op.permlink
-                end
-
-            end
-        end
-        result
+        # Now that we have author, get the most recent post
+        self.recent_author(author, depth)
     end
 
     def self.largest_contributor(account, depth)
         api = Radiator::Api.new
 
         # Grab most recent N operations for the author and cycle through them
-        result = "nil"
+        result = nil
         contribution = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
