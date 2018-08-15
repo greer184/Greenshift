@@ -24,7 +24,9 @@ class Relationship
                 
             end
         end
-        result
+
+        # Create a new post to pass to view
+        Post.new(result, account)
     end
 
     def self.recent_upvote(account, depth)
@@ -32,6 +34,7 @@ class Relationship
 
         # Grab most recent N operations for the author and cycle through them
         result = nil
+        author = nil
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -53,11 +56,14 @@ class Relationship
                 api.get_content(op.author, op.permlink) do |content|
                     next unless content.parent_author.empty?
                     result = op.permlink
+                    author = op.author
                 end
 
             end
         end
-        result
+
+        # Create a new post to pass to view
+        Post.new(result, author)
     end
 
     def self.max_upvote(account, depth)
@@ -65,6 +71,7 @@ class Relationship
 
         # Grab most recent N operations for the author and cycle through them
         result = nil
+        author = nil
         max_weight = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -88,11 +95,14 @@ class Relationship
                     next unless content.parent_author.empty?
                     result = op.permlink
                     max_weight = op.weight
+                    author = op.author
                 end
 
             end
         end
-        result
+        
+        # Create a new post to pass to view
+        Post.new(result, author)
     end
 
     def self.recent_resteem(account, depth)
@@ -126,6 +136,7 @@ class Relationship
 
         # Grab most recent N operations for the author and cycle through them
         result = nil
+        author = nil
         contribution = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -154,13 +165,16 @@ class Relationship
                             if v.weight > contribution
                                 contribution = v.weight
                                 result = op.permlink
+                                author = op.author
                             end
                         end
                     end
                 end
             end
         end
-        result
+
+        # Create a new post to pass to view
+        Post.new(result, author)
     end
 
 end
