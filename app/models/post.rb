@@ -1,4 +1,4 @@
-class Post
+class Post < ApplicationRecord
 
     attr_accessor :title
     attr_accessor :url
