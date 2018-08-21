@@ -1,4 +1,4 @@
-class ContentController < ApplicationController
+class PostsController < ApplicationController
 
   # This is the overall display for Content
   def index
