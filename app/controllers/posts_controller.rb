@@ -10,7 +10,7 @@ class PostsController < ApplicationController
       Relationship.recent_resteem(author, 1000),
       Relationship.largest_contributor(author, 200),
     ]
-    @options.uniq! {|p| p.title }
+    @options.uniq!
   end
 
 end

@@ -7,6 +7,7 @@ class Relationship
 
         # Grab most recent N operations for the author and cycle through them
         result = nil
+        title = nil
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -21,12 +22,14 @@ class Relationship
                 next unless op.parent_author.empty?
                 next if age > SECONDS_IN_WEEK
                 result = op.permlink
-                
+                result = op.title
             end
         end
 
-        # Create a new post to pass to view
-        Post.new(result, account)
+        # Store new post if it doesn't exist
+        Post.find_or_create_by!(permlink: result, author: account) do |post|
+            post.title = title
+        end
     end
 
     def self.recent_upvote(account, depth)
@@ -35,6 +38,7 @@ class Relationship
         # Grab most recent N operations for the author and cycle through them
         result = nil
         author = nil
+        title = nil
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
 
@@ -57,13 +61,16 @@ class Relationship
                     next unless content.parent_author.empty?
                     result = op.permlink
                     author = op.author
+                    title = op.title
                 end
 
             end
         end
 
-        # Create a new post to pass to view
-        Post.new(result, author)
+        # Store new post if it doesn't exist
+        Post.find_or_create_by!(permlink: result, author: author) do |post|
+            post.title = title
+        end
     end
 
     def self.max_upvote(account, depth)
@@ -72,6 +79,7 @@ class Relationship
         # Grab most recent N operations for the author and cycle through them
         result = nil
         author = nil
+        title = nil
         max_weight = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -96,13 +104,16 @@ class Relationship
                     result = op.permlink
                     max_weight = op.weight
                     author = op.author
+                    title = op.title
                 end
 
             end
         end
         
-        # Create a new post to pass to view
-        Post.new(result, author)
+        # Store new post if it doesn't exist
+        Post.find_or_create_by!(permlink: result, author: author) do |post|
+            post.title = title
+        end
     end
 
     def self.recent_resteem(account, depth)
@@ -137,6 +148,7 @@ class Relationship
         # Grab most recent N operations for the author and cycle through them
         result = nil
         author = nil
+        title = nil
         contribution = 0
         api.get_account_history(account, -1, depth) do |data|
             data.each do |i, item|
@@ -166,6 +178,7 @@ class Relationship
                                 contribution = v.weight
                                 result = op.permlink
                                 author = op.author
+                                title = op.title
                             end
                         end
                     end
@@ -173,8 +186,10 @@ class Relationship
             end
         end
 
-        # Create a new post to pass to view
-        Post.new(result, author)
+        # Store new post if it doesn't exist
+        Post.find_or_create_by!(permlink: result, author: author) do |post|
+            post.title = title
+        end
     end
 
 end
