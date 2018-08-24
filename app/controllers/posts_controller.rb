@@ -11,6 +11,7 @@ class PostsController < ApplicationController
       Relationship.largest_contributor(author, 200),
     ]
     @options.uniq!
+    @options.map! { |op| Post.find_by(permlink: op) }
   end
 
 end

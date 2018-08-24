@@ -22,14 +22,15 @@ class Relationship
                 next unless op.parent_author.empty?
                 next if age > SECONDS_IN_WEEK
                 result = op.permlink
-                result = op.title
+                title = op.title
             end
         end
 
         # Store new post if it doesn't exist
-        Post.find_or_create_by!(permlink: result, author: account) do |post|
-            post.title = title
+        if Post.find_by(permlink: result).nil?
+            Post.create(permlink: result, author: account, title: title)
         end
+        result
     end
 
     def self.recent_upvote(account, depth)
@@ -61,16 +62,17 @@ class Relationship
                     next unless content.parent_author.empty?
                     result = op.permlink
                     author = op.author
-                    title = op.title
+                    title = content.title
                 end
 
             end
         end
 
         # Store new post if it doesn't exist
-        Post.find_or_create_by!(permlink: result, author: author) do |post|
-            post.title = title
+        if Post.find_by(permlink: result).nil?
+            Post.create(permlink: result, author: author, title: title)
         end
+        result
     end
 
     def self.max_upvote(account, depth)
@@ -104,16 +106,17 @@ class Relationship
                     result = op.permlink
                     max_weight = op.weight
                     author = op.author
-                    title = op.title
+                    title = content.title
                 end
 
             end
         end
         
         # Store new post if it doesn't exist
-        Post.find_or_create_by!(permlink: result, author: author) do |post|
-            post.title = title
+        if Post.find_by(permlink: result).nil?
+            Post.create(permlink: result, author: author, title: title)
         end
+        result
     end
 
     def self.recent_resteem(account, depth)
@@ -178,7 +181,7 @@ class Relationship
                                 contribution = v.weight
                                 result = op.permlink
                                 author = op.author
-                                title = op.title
+                                title = content.title
                             end
                         end
                     end
@@ -187,9 +190,9 @@ class Relationship
         end
 
         # Store new post if it doesn't exist
-        Post.find_or_create_by!(permlink: result, author: author) do |post|
-            post.title = title
+        if Post.find_by(permlink: result).nil?
+            Post.create(permlink: result, author: author, title: title)
         end
+        result
     end
-
 end
