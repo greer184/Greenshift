@@ -1,2 +1,5 @@
 <h1><%= @post.title %></h1>
-<%= Post.get_body(@post.permlink, @post.author) %>
+<% renderer = Redcarpet::Render::HTML.new(hard_wrap: true) %>
+<% md = Redcarpet::Markdown.new(renderer) %>
+<%= md.render(Post.get_body(@post.permlink, @post.author)).html_safe %>
+

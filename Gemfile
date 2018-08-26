@@ -36,6 +36,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Radiator for Steem blockchain magic
 gem 'radiator', '~> 0.4.0' 
 
+# Use Red Carpet for markdown magic
+gem 'redcarpet', '~> 3.4.0'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
