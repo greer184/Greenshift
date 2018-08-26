@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
 
-  # This is the overall display for Content
+  # This is the overall display for all content
   def index
     author = 'greer184'
     @options = [
@@ -12,6 +12,12 @@ class PostsController < ApplicationController
     ]
     @options.uniq!
     @options.map! { |op| Post.find_by(permlink: op) }
+    @options.reject! { |op| op.nil? }
+  end
+
+  # This is the display for a single piece of content
+  def show
+    @post = Post.find(params[:id])
   end
 
 end

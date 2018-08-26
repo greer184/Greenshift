@@ -27,7 +27,7 @@ class Relationship
         end
 
         # Store new post if it doesn't exist
-        if Post.find_by(permlink: result).nil?
+        if Post.find_by(permlink: result).nil? and !result.nil?
             Post.create(permlink: result, author: account, title: title)
         end
         result
@@ -69,7 +69,7 @@ class Relationship
         end
 
         # Store new post if it doesn't exist
-        if Post.find_by(permlink: result).nil?
+        if Post.find_by(permlink: result).nil? and !result.nil?
             Post.create(permlink: result, author: author, title: title)
         end
         result
@@ -113,7 +113,7 @@ class Relationship
         end
         
         # Store new post if it doesn't exist
-        if Post.find_by(permlink: result).nil?
+        if Post.find_by(permlink: result).nil? and !result.nil?
             Post.create(permlink: result, author: author, title: title)
         end
         result
@@ -190,7 +190,7 @@ class Relationship
         end
 
         # Store new post if it doesn't exist
-        if Post.find_by(permlink: result).nil?
+        if Post.find_by(permlink: result).nil? and !result.nil?
             Post.create(permlink: result, author: author, title: title)
         end
         result

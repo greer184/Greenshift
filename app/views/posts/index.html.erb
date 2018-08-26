@@ -1,4 +1,4 @@
 <h1>Interesting Articles</h1>
 <% @options.each do |op| %>
-    <p><%= op.title %></p>
+    <p><%= link_to "#{op.title}", op %></p>
 <% end %>
