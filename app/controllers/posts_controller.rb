@@ -2,7 +2,10 @@ class PostsController < ApplicationController
 
   # This is the overall display for all content
   def index
-    author = 'greer184'
+    author = flash[:author]
+    if author.nil?
+      author = "greer184"
+    end
     @options = [
       Relationship.recent_author(author, 200),
       Relationship.recent_upvote(author, 200),
@@ -18,6 +21,7 @@ class PostsController < ApplicationController
   # This is the display for a single piece of content
   def show
     @post = Post.find(params[:id])
+    flash[:author] = @post.author
   end
 
 end
